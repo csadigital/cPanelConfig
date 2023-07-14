@@ -6,16 +6,18 @@ PASSV_PORT="50000:65534";
 PASSV_MIN=$(echo $PASSV_PORT | cut -d':' -f1)
 PASSV_MAX=$(echo $PASSV_PORT | cut -d':' -f2)
 ISVPS=$(((dmidecode -t system 2>/dev/null | grep "Manufacturer" | grep -i 'VMware\|KVM\|Bochs\|Virtual\|HVM' > /dev/null) || [ -f /proc/vz/veinfo ]) && echo "SI" || echo "NO")
+#!/bin/bash
+
+ 
 echo ""
+echo "  _______     ______     ______     ______   "
+echo " /  _____\   /  __  \   /  __  \   /  ___/   "
+echo "|  |  __     |  |  |  | |  |  |  | |  |___    "
+echo "|  | |_ |    |  |  |  | |  |  |  | \___  \   "
+echo "|  |__| |    |  `--'  | |  `--'  |  ___|  |   "
+echo " \______|     \______/   \______/  /_____/    "
 echo ""
-echo "	##      ##   ###      ###        ####        ##    ##         "
-echo "	##    ##     ###      ###        ####        ##    ##         "
-echo "	##   ##      ## ##  ## ##       ##  ##       ##    ##         "    
-echo "	##    ##     ##   ##   ##      ##    ##      ##    ##         "   
-echo "	##      ##   ##        ##     ##########     ##    ##         "   
-echo "	##      ##   ##        ##    ##        ##    ##    ##         "   
-echo "	##     ##    ##        ##   ##          ##   ##    ##      ## "   
-echo "	##   ##      ##        ##  ##            ##  ##    ########## "   
+
 
 echo ""
 echo ""
