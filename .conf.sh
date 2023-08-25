@@ -22,6 +22,8 @@ echo "                                                                          
 echo -e "\e[32mSunucu optimizasyonu başlıyor...\e[0m"
 echo -e "\e[32mcsadigital.net\e[0m"
 
+echo "####### CPANEL PRE-CONFIGURATION ##########"
+echo "####### Disabling yum-cron...########"
 yum erase yum-cron -y
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
@@ -87,9 +89,7 @@ echo "####### END INSTALLING CPANEL #######"
 				/usr/bin/tar -xzf /usr/src/csf.tgz -C /usr/src && cd /usr/src/csf && sh install.sh &>/dev/null
 				yum remove firewalld -y
 				yum -y install iptables-services wget perl unzip net-tools perl-libwww-perl perl-LWP-Protocol-https perl-GDGraph
-				/usr/bin/wget https://github.com/csadigital/cPanelConfig/blob/main/csf.conf -O /etc/csf/csf.conf &>/dev/null
-    				/usr/bin/wget https://raw.githubusercontent.com/csadigital/cPanel-Auto-Config/main/csf.allow -O /etc/csf/csf.conf &>/dev/null
-
+				/usr/bin/wget https://raw.githubusercontent.com/ismailh/CpanelWHM-PreConfig/main/csf.conf -O /etc/csf/csf.conf &>/dev/null
 				cd /root && /usr/bin/rm -rf /usr/src/csf /usr/src/csf.tgz /usr/src/error_log &>/dev/null
 			echo " Setting CSF..."
 
@@ -267,7 +267,7 @@ if [ -d /usr/local/cpanel/whostmgr/docroot/cgi/softaculous ] ; then
 php_suexec="2"
 port_offset="1000"
 admin_user="admin"
-admin_pass="csadigital"
+admin_pass="webhost321"
 admin_email="root@localhost"
 easyapache_integration="1"
 auto_switch_to_lsws="1"
@@ -502,8 +502,8 @@ echo "SETTING exim..."
 /usr/bin/sed -i 's/max_input_time = .*/max_input_time = 200/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
 /usr/bin/sed -i 's/max_input_vars = .*/max_input_vars = 3000/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
 /usr/bin/sed -i 's/memory_limit = .*/memory_limit = 248M/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
-/usr/bin/sed -i 's/post_max_size = .*/post_max_size = 128M/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
-/usr/bin/sed -i 's/upload_max_filesize = .*/upload_max_filesize = 128M/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
+/usr/bin/sed -i 's/post_max_size = .*/post_max_size = 100M/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
+/usr/bin/sed -i 's/upload_max_filesize = .*/upload_max_filesize = 100M/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
 /usr/bin/sed -i 's/allow_url_fopen = .*/allow_url_fopen = On/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
 /usr/bin/sed -i 's/file_uploads = .*/file_uploads = On/' /opt/cpanel/ea-php*/root/etc/php.ini &>/dev/null
 /usr/local/cpanel/whostmgr/bin/whostmgr2 --updatetweaksettings &>/dev/null
@@ -785,12 +785,11 @@ ea-php81-runtime \
 
 --skip-broken
 echo "Setting EasyApache 4 PHP..."
-
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^memory_limit.*/memory_limit = 1024M/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^enable_dl.*/enable_dl = Off/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^expose_php.*/expose_php = Off/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^register_globals.*/register_globals = Off/g'
-find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^magic_quotes_gpc.*/magic_quotes_gpc = Off/g'
+find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^emagic_quotes_gpc.*/magic_quotes_gpc = Off/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^disable_functions.*/disable_functions = apache_get_modules,apache_get_version,apache_getenv,apache_note,apache_setenv,disk_free_space,diskfreespace,dl,exec,highlight_file,ini_alter,ini_restore,openlog,passthru,phpinfo,popen,posix_getpwuid,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,symlink,system,eval,debug_zval_dump/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^upload_max_filesize.*/upload_max_filesize = 100M/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^post_max_size.*/post_max_size = 100M/g'
@@ -805,29 +804,23 @@ find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^display
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^track_errors.*/track_errors = Off/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^html_errors.*/html_errors = Off/g'
 find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^error_reporting.*/error_reporting = E_ALL \& \~E_DEPRECATED \& \~E_STRICT/g'
-
-echo "Setting default PHP-FPM values..."
+echo "Setting default PHP-FPM values..." # https://documentation.cpanel.net/display/74Docs/Configuration+Values+of+PHP-FPM
 mkdir -p /var/cpanel/ApachePHPFPM
 cat > /var/cpanel/ApachePHPFPM/system_pool_defaults.yaml << EOF
 ---
 pm_max_children: 20
 pm_max_requests: 40
-php_admin_value_disable_functions: { present_ifdefault: 0 }
+php_admin_value_disable_functions : { present_ifdefault: 0 }
 EOF
-
 /usr/local/cpanel/scripts/php_fpm_config --rebuild
 /scripts/restartsrv_apache_php_fpm
-
 echo "Configuring Handlers..."
 whmapi1 php_set_handler version=ea-php55 handler=cgi
 whmapi1 php_set_handler version=ea-php56 handler=cgi
 whmapi1 php_set_handler version=ea-php70 handler=cgi
 whmapi1 php_set_handler version=ea-php71 handler=cgi
 whmapi1 php_set_handler version=ea-php72 handler=cgi
-whmapi1 php_set_handler version=ea-php74 handler=cgi
-
-whmapi1 php_set_system_default_version version=ea-php74
-
+whmapi1 php_set_system_default_version version=ea-php72
 echo "Configuring PHP-FPM..."
 whmapi1 php_set_default_accounts_to_fpm default_accounts_to_fpm=1
 whmapi1 convert_all_domains_to_fpm
@@ -996,25 +989,7 @@ echo "Cleaning...."
 echo "" > /root/.conf.sh
 history -c
 echo "" > /root/.bash_history
-wget -O /usr/local/lsws/conf/httpd_config.xml https://raw.githubusercontent.com/csadigital/Linux/main/httpd_config.xml && chown lsadm:lsadm /usr/local/lsws/conf/httpd_config.xml && chmod 644 /usr/local/lsws/conf/httpd_config.xml
 
-
-
-
-sudo sed -i 's/#Port 22/Port 2220/' /etc/ssh/sshd_config
-sudo systemctl restart sshd
-#!/bin/bash
-
-CSF_CONFIG="/etc/csf/csf.conf"
-
-# SSH portunu CSF yapılandırma dosyasına ekleyin
-sed -i 's/^TCP_IN.*/TCP_IN = "20,21,22,2220"/' $CSF_CONFIG
-
-# CSF hizmetini yeniden başlatın
-csf -r
-
-echo "SSH portu 2220 olarak etkinleştirildi."
-#!/bin/bash
 
 message="Sunucu kurulum ve optimizasyon işlemleriniz başarıyla tamamlandı"
 logo="
